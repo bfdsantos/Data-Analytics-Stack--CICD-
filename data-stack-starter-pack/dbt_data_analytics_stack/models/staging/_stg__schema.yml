@@ -1,0 +1,251 @@
+models:
+  - name: stg_webshop__categories
+    description: "Staging table for webshop categories"
+    columns:
+      - name: category_name
+        data_type: character varying
+        description: "Name of the category"
+      - name: category_id
+        data_type: character varying
+        description: "Unique identifier for the category"
+      - name: category_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the category was created"
+      - name: category_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the category was last modified"
+
+  - name: stg_webshop__orders
+    description: "Staging table for webshop orders"
+    columns:
+      - name: customer_id
+        data_type: character varying
+        description: "Unique identifier for the customer"
+      - name: order_status
+        data_type: user-defined
+        description: "Status of the order"
+      - name: customer_address_id
+        data_type: character varying
+        description: "Unique identifier for the customer address"
+      - name: order_id
+        data_type: character varying
+        description: "Unique identifier for the order"
+      - name: order_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the order was created"
+      - name: order_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the order was last modified"
+
+  - name: stg_webshop__customer_addresses
+    description: "Staging table for customer addresses"
+    columns:
+      - name: customer_id
+        data_type: character varying
+        description: "Unique identifier for the customer"
+      - name: address_street
+        data_type: character varying
+        description: "Street name of the address"
+      - name: address_number
+        data_type: character varying
+        description: "Street number of the address"
+      - name: address_city
+        data_type: character varying
+        description: "City of the address"
+      - name: address_postal_code
+        data_type: character varying
+        description: "Postal code of the address"
+      - name: address_country
+        data_type: character varying
+        description: "Country of the address"
+      - name: customer_address_id
+        data_type: character varying
+        description: "Unique identifier for the customer address"
+      - name: customer_address_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the customer address was created"
+      - name: customer_address_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the customer address was last modified"
+
+  - name: stg_webshop__payment_providers
+    description: "Staging table for payment providers"
+    columns:
+      - name: payment_provider_name
+        data_type: character varying
+        description: "Name of the payment provider"
+      - name: fixed_payment_costs
+        data_type: double precision
+        description: "Fixed costs for using the payment provider"
+      - name: percentage_payment_costs
+        data_type: double precision
+        description: "Percentage costs for using the payment provider"
+      - name: payment_provider_id
+        data_type: character varying
+        description: "Unique identifier for the payment provider"
+      - name: payment_provider_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the payment provider was created"
+      - name: payment_provider_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the payment provider was last modified"
+
+  - name: stg_webshop__customer_payment_providers
+    description: "Staging table for customer payment providers"
+    columns:
+      - name: customer_id
+        data_type: character varying
+        description: "Unique identifier for the customer"
+      - name: payment_provider_id
+        data_type: character varying
+        description: "Unique identifier for the payment provider"
+      - name: customer_payment_provider_account_no
+        data_type: character varying
+        description: "Account number for the customer with the payment provider"
+      - name: customer_payment_provider_id
+        data_type: character varying
+        description: "Unique identifier for the customer payment provider"
+      - name: customer_payment_provider_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the customer payment provider was created"
+      - name: customer_payment_provider_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the customer payment provider was last modified"
+
+  - name: stg_webshop__product_brands
+    description: "Staging table for product brands"
+    columns:
+      - name: product_brand_name
+        data_type: character varying
+        description: "Name of the product brand"
+      - name: product_brand_id
+        data_type: character varying
+        description: "Unique identifier for the product brand"
+      - name: product_brand_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the product brand was created"
+      - name: product_brand_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the product brand was last modified"
+
+  - name: stg_webshop__customers
+    description: "Staging table for customers"
+    columns:
+      - name: customer_name
+        data_type: character varying
+        description: "Name of the customer"
+      - name: customer_email
+        data_type: character varying
+        description: "Email of the customer"
+      - name: customer_phone_number
+        data_type: character varying
+        description: "Phone number of the customer"
+      - name: customer_id
+        data_type: character varying
+        description: "Unique identifier for the customer"
+      - name: customer_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the customer was created"
+      - name: customer_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the customer was last modified"
+
+  - name: stg_webshop__product_categories
+    description: "Staging table for product categories"
+    columns:
+      - name: category_id
+        data_type: character varying
+        description: "Unique identifier for the category"
+      - name: product_id
+        data_type: character varying
+        description: "Unique identifier for the product"
+      - name: product_category_id
+        data_type: character varying
+        description: "Unique identifier for the product category"
+      - name: product_category_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the product category was created"
+      - name: product_category_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the product category was last modified"
+
+  - name: stg_webshop__events
+    description: "Staging table for events"
+    columns:
+      - name: event_type
+        data_type: user-defined
+        description: "Type of the event"
+      - name: event_content
+        data_type: json
+        description: "Content of the event"
+      - name: event_id
+        data_type: character varying
+        description: "Unique identifier for the event"
+      - name: event_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the event was created"
+      - name: event_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the event was last modified"
+
+  - name: stg_webshop__products
+    description: "Staging table for products"
+    columns:
+      - name: product_name
+        data_type: character varying
+        description: "Name of the product"
+      - name: product_description
+        data_type: character varying
+        description: "Description of the product"
+      - name: product_ean
+        data_type: character varying
+        description: "EAN code of the product"
+      - name: product_price
+        data_type: double precision
+        description: "Price of the product"
+      - name: product_discount_percent
+        data_type: double precision
+        description: "Discount percentage for the product"
+      - name: product_brand_id
+        data_type: character varying
+        description: "Unique identifier for the product brand"
+      - name: product_inventory
+        data_type: integer
+        description: "Inventory count of the product"
+      - name: product_published
+        data_type: boolean
+        description: "Publication status of the product"
+      - name: product_id
+        data_type: character varying
+        description: "Unique identifier for the product"
+      - name: product_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the product was created"
+      - name: product_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the product was last modified"
+
+  - name: stg_webshop__order_items
+    description: "Staging table for order items"
+    columns:
+      - name: order_id
+        data_type: character varying
+        description: "Unique identifier for the order"
+      - name: product_id
+        data_type: character varying
+        description: "Unique identifier for the product"
+      - name: item_quantity
+        data_type: integer
+        description: "Quantity of the item ordered"
+      - name: item_price
+        data_type: double precision
+        description: "Price of the item"
+      - name: order_item_id
+        data_type: character varying
+        description: "Unique identifier for the order item"
+      - name: order_item_created_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the order item was created"
+      - name: order_item_modified_at
+        data_type: timestamp without time zone
+        description: "Timestamp when the order item was last modified"

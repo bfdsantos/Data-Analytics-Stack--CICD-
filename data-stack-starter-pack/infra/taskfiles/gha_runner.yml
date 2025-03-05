@@ -1,0 +1,21 @@
+version: '3'
+includes:
+  env_checks:
+    taskfile: ./env_checks.yml
+    internal: true
+tasks:
+  push_secrets:
+    desc: "Push secrets to the GitHub repository"
+    cmds:
+      - uv run python ./scripts/push_secrets_to_github.py
+    interactive: true
+    silent: true
+
+  get_token:
+    desc: >
+      Retrieve or refresh the GitHub self-hosted runner token.
+    cmds:
+      - sh ./scripts/get_runner_token.sh
+    preconditions:
+      - task: env_checks:check_github_token
+    silent: true

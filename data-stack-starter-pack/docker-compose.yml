@@ -1,0 +1,39 @@
+name: cicd-dbt
+services:
+  postgres:
+    image: postgres:17.0
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: webshop
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./infra/postgres/data:/var/lib/postgresql/data
+      - ./infra/postgres/dump:/dump
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "webshop"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 80s
+
+  gha_runner:
+    image: myoung34/github-runner:latest
+    restart: always
+    environment:
+      REPO_URL: "https://github.com/${REPO_URL}"
+      RUNNER_NAME: ${RUNNER_NAME}
+      RUNNER_TOKEN: ${RUNNER_TOKEN}
+      RUNNER_WORKDIR: /tmp/runner/work
+      CONFIGURED_ACTIONS_RUNNER_FILES_DIR: /runner/data
+      RUNNER_SCOPE: repo
+      LABELS: linux,x64,self-hosted
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./infra/gha_runner/tmp:/tmp/runner
+      - ./infra/gha_runner/data:/runner/data
+      - ./logs/gha_runner:/runner/data/_diag

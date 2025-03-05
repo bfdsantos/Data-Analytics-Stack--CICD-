@@ -1,0 +1,85 @@
+version: '3'
+tasks:
+  check_dotenv:
+    desc: "Check if .env file exists"
+    cmds:
+      - test -f .env
+    silent: true
+
+  set_env_vars:
+    desc: "Set environment variables"
+    cmds:
+      - export $(cat .env | xargs)
+    preconditions:
+      - task: check_dotenv
+    silent: true
+
+  check_data_status:
+    desc: "Verifies if the data is ready for the pipeline"
+    cmds:
+      - |
+        sh -c 'count=0; until sh ./scripts/check_data_status.sh {{.CONTAINER}} dev_webshop foreign_raw; \
+        do \
+          if [ $count -ge 5 ]; then \
+            echo "Schema not present after 5 attempts. Exiting."; \
+            exit 1; \
+          fi; \
+          echo "Waiting for data to show up..."; \
+          sleep 20; \
+          count=$((count + 1)); \
+        done;'
+    vars:
+      CONTAINER: '{{.CONTAINER | default "cicd-dbt-dev_postgres-1"}}'
+    silent: true
+
+  check_uv:
+    desc: "Check if uv is installed"
+    cmds:
+      - command -v uv >/dev/null 2>&1 || echo "uv is not installed"
+    silent: true
+
+  check_dbt:
+    desc: "Check if dbt is installed"
+    cmds:
+      - command -v uv run dbt >/dev/null 2>&1 || echo "dbt is not installed"
+    silent: true
+
+  check_dbt_initialized:
+    desc: "Check if dbt has been initialized"
+    cmds:
+      - test -d ./dbt/dbt_project.yml || echo "dbt has not been initialized"
+    silent: true
+
+  check_dbt_db_online:
+    desc: "Check if Postgres database is online"
+    cmds:
+      - nc -z localhost $DB_PORT || echo "Port $DB_PORT is not open"
+    vars:
+      DB_PORT: '{{.DB_PORT | default "5432"}}'
+    silent: true
+
+  check_github_token:
+    desc: "Check if GitHub token is present"
+    cmds:
+      - |
+        test "$(gdate -u +%s)" -gt "$(gdate -d "{{.RUNNER_TOKEN_EXPIRES_AT}}" +%s)" \
+        || echo "The GitHub self-hosted runner token is valid until {{.RUNNER_TOKEN_EXPIRES_AT}}. Use --force to refresh it anyway."
+    silent: true
+
+  check_runner_status:
+    desc: "Check the status of the GitHub self-hosted runner"
+    cmds:
+      - sh ./scripts/get_runner_status.sh
+    silent: true
+
+  check_gh_auth_status:
+    desc: "Check if user is authenticated with GitHub"
+    cmds:
+      - |
+        if gh auth status | grep -q "Logged in"; then
+          echo "User is authenticated with GitHub";
+        else
+          echo "User is not authenticated with GitHub";
+          exit 1;
+        fi
+    silent: true

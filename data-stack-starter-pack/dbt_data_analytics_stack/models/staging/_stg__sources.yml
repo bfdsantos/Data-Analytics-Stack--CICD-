@@ -1,0 +1,178 @@
+sources:
+  - name: raw_webshop
+    database: "{{ target.dbname }}"
+    schema: raw
+    tables:
+
+      - name: category
+        columns:
+          - name: name
+            data_type: character varying
+          - name: parent
+            data_type: character varying
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: customer
+        columns:
+          - name: name
+            data_type: character varying
+          - name: email
+            data_type: character varying
+          - name: phone_number
+            data_type: character varying
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: customeraddress
+        columns:
+          - name: customer
+            data_type: integer
+          - name: street
+            data_type: character varying
+          - name: number
+            data_type: character varying
+          - name: city
+            data_type: character varying
+          - name: postal_code
+            data_type: character varying
+          - name: country
+            data_type: character varying
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: customerpaymentprovider
+        columns:
+          - name: customer
+            data_type: integer
+          - name: provider
+            data_type: character varying
+          - name: account_no
+            data_type: character varying
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: event
+        columns:
+          - name: type
+            data_type: character varying
+          - name: event
+            data_type: json
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: paymentprovider
+        columns:
+          - name: name
+            data_type: character varying
+          - name: fixed_payment_costs
+            data_type: double precision
+          - name: percentage_payment_costs
+            data_type: double precision
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: product
+        columns:
+          - name: name
+            data_type: character varying
+          - name: description
+            data_type: character varying
+          - name: ean
+            data_type: character varying
+          - name: price
+            data_type: double precision
+          - name: discount_percent
+            data_type: double precision
+          - name: brand
+            data_type: integer
+          - name: inventory
+            data_type: integer
+          - name: published
+            data_type: boolean
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: productbrand
+        columns:
+          - name: name
+            data_type: character varying
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: productcategory
+        columns:
+          - name: category
+            data_type: integer
+          - name: product
+            data_type: integer
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: orders
+        columns:
+          - name: customer
+            data_type: integer
+          - name: status
+            data_type: character varying
+          - name: customer_address
+            data_type: integer
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone
+
+      - name: orderitem
+        columns:
+          - name: order
+            data_type: integer
+          - name: product
+            data_type: integer
+          - name: quantity
+            data_type: integer
+          - name: price
+            data_type: double precision
+          - name: id
+            data_type: integer
+          - name: created_at
+            data_type: timestamp without time zone
+          - name: modified_at
+            data_type: timestamp without time zone

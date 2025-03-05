@@ -1,0 +1,29 @@
+[project]
+name = "dbt"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dbt-core>=1.8.9",
+    "dbt-postgres>=1.8.2",
+    "pynacl>=1.5.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "isort>=6.0.0",
+    "pre-commit>=4.0.1",
+    "ruff>=0.9.6",
+    "shandy-sqlfmt[jinjafmt]>=0.26.0",
+    "yamllint>=1.35.1",
+]
+
+[tool.ruff]
+include = ["pyproject.toml", "scripts/**/*.py"]
+
+[dependency-groups]
+book = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.7",
+]

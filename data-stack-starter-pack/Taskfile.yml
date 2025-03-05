@@ -1,0 +1,58 @@
+version: '3'
+dotenv:
+  - .env
+includes:
+  dbt:
+    taskfile: ./infra/taskfiles/dbt.yml
+  docker:
+    taskfile: ./infra/taskfiles/docker.yml
+  gha_runner:
+    taskfile: ./infra/taskfiles/gha_runner.yml
+  env_checks:
+    taskfile: ./infra/taskfiles/env_checks.yml
+    internal: true
+
+tasks:
+  init/all:
+    desc: "Initialize all infra"
+    cmds:
+      - task: env_checks:check_dotenv
+      - task: init/gha_runner
+      - task: init/docker
+      - task: init/dbt
+
+  init/dbt:
+    desc: "Initialize dbt"
+    dir: ./dbt
+    cmds:
+      - uv run dbt deps
+      - uv run dbt seed
+      - task: dbt:get_samples
+      - uv run dbt build
+
+  init/docker:
+    desc: "Initialize Docker"
+    cmds:
+      - task: docker:deploy/all
+      - task: env_checks:check_data_status
+
+  init/gha_runner:
+    desc: "Initialize GitHub Actions runner"
+    cmds:
+      - task gha_runner:get_token
+      - task gha_runner:push_secrets
+    interactive: true
+
+  destroy/all:
+    desc: "Destroy all infra"
+    cmds:
+      - task: docker:remove/all
+      - rm -rf ./infra/postgres/data
+      - rm -rf ./infra/minio/data
+      - rm -rf ./infra/gha_runner/data
+      - echo "All infra destroyed"
+
+  check/gh_status:
+    desc: "Check if GitHub Actions runner is running"
+    cmds:
+      - task: env_checks:check_gh_auth_status

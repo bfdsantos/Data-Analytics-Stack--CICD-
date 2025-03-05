@@ -1,0 +1,72 @@
+version: '3'
+includes:
+  env_checks:
+    taskfile: ./env_checks.yml
+    internal: true
+tasks:
+  # Containers
+  # Individual containers
+  deploy:
+    desc: |
+      Deploy specified containers specified in the CONTAINERS variable. If you don't specify any containers,
+      it will deploy the gha_runner container.
+
+      Usage:
+        `task deploy CONTAINERS=minio`
+        `task deploy 'CONTAINERS=prod_postgres dev_postgres'`
+    vars:
+      CONTAINERS: '{{.CONTAINERS | default "gha_runner"}}'
+    cmds:
+      - 'echo "Deploying containers: {{.CONTAINERS}}"'
+      - docker compose up -d {{.CONTAINERS}}
+    preconditions:
+      - task: env_checks:check_dotenv
+      - task: env_checks:check_github_token
+        when: 'vars.CONTAINERS | contains "gha_runner"'
+
+  stop:
+    desc: |
+      Stop specified containers specified in the CONTAINERS variable. If you don't specify any containers,
+      it will stop the gha_runner container.
+
+      Usage:
+        `task stop CONTAINERS=minio`
+        `task stop 'CONTAINERS=prod_postgres dev_postgres'`
+    vars:
+      CONTAINERS: '{{.CONTAINERS | default "gha_runner"}}'
+    cmds:
+      - 'echo "Stopping containers: {{.CONTAINERS}}"'
+      - docker compose stop {{.CONTAINERS}}
+
+  remove:
+    desc: |
+      Remove specified containers specified in the CONTAINERS variable. If you don't specify any containers,
+      it will remove the gha_runner container.
+
+      Usage:
+        `task remove CONTAINERS=minio`
+        `task remove 'CONTAINERS=prod_postgres dev_postgres'`
+    vars:
+      CONTAINERS: '{{.CONTAINERS | default "gha_runner"}}'
+    cmds:
+      - 'echo "Removing containers: {{.CONTAINERS}}"'
+      - docker compose down {{.CONTAINERS}}
+
+  # All containers
+  deploy/all:
+    desc: "Deploy all containers"
+    cmds:
+      - docker compose up -d
+    preconditions:
+      - task: env_checks:check_dotenv
+      - task: env_checks:check_github_token
+
+  stop/all:
+    desc: "Stop all containers"
+    cmds:
+      - docker compose stop
+
+  remove/all:
+    desc: "Remove all containers"
+    cmds:
+      - docker compose down
