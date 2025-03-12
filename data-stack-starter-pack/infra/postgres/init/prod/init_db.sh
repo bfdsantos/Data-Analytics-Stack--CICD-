@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-DB_NAME="webshop"
+DB_NAME="${POSTGRES_DB}"
 DB_USER="${POSTGRES_USER}"
 DUMP_FILE="/dump/webshop.dump"
 
