@@ -27,3 +27,9 @@ book = [
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.7",
 ]
+ci = [
+    "isort>=6.0.0",
+    "ruff>=0.9.6",
+    "shandy-sqlfmt[jinjafmt]>=0.26.0",
+    "yamllint>=1.35.1",
+]

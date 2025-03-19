@@ -18,7 +18,7 @@ tasks:
     desc: "Verifies if the data is ready for the pipeline"
     cmds:
       - |
-        sh -c 'count=0; until sh ./scripts/check_data_status.sh {{.CONTAINER}} dev_webshop foreign_raw; \
+        sh -c 'count=0; until sh ./scripts/check_data_status.sh {{.CONTAINER}} webshop raw_prod; \
         do \
           if [ $count -ge 5 ]; then \
             echo "Schema not present after 5 attempts. Exiting."; \

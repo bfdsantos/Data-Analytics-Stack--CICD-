@@ -7,4 +7,21 @@ on:
 
 jobs:
   CI_jobs:
-    runs-on: self-hosted # ubuntu-latest
+    runs-on: self-hosted # ubuntu-latest (runner in github with label self-hosted)
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up python
+        run: uv python install
+
+      - name: Install dependencies 
+        run: uv sync --group ci
+

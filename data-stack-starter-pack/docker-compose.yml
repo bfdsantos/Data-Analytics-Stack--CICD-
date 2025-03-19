@@ -38,6 +38,29 @@ services:
       prod_postgres:
         condition: service_healthy
 
+  test_postgres:
+    image: postgres:17.0
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: "${POSTGRES_DB}"
+    ports:
+      - "5678:5432"
+    volumes:
+      - ./infra/postgres/data/test:/var/lib/postgresql/data
+      - ./infra/postgres/init/non-prod:/docker-entrypoint-initdb.d
+    depends_on: 
+      prod_postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "webshop"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 80s
+
   gha_runner:
     image: myoung34/github-runner:latest
     restart: always
