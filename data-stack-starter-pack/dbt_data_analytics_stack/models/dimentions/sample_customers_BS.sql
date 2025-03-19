@@ -1,0 +1,1 @@
+{{ sample_data('raw_prod', 'customers', 50) }}

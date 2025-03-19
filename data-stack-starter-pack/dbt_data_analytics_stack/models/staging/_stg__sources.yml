@@ -2,8 +2,12 @@ sources:
   - name: raw_webshop
     database: "{{ target.dbname }}"
     schema: raw
+    config: 
+      sampling_method: random_sample
+      dev_sample_size: 25
+      test_sample_size: 50
+      
     tables:
-
       - name: category
         columns:
           - name: name

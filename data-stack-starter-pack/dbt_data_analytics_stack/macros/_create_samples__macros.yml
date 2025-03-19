@@ -1,0 +1,100 @@
+macros:
+  - name: create_all_samples
+    # yamllint disable rule:line-length
+    description: >
+      This macro goes through all the models in the project and creates development and test
+      samples for each model. The sampling method is defined in the model configuration (e.g.,
+      `sampling_method: random_sample`).
+
+      Usage: In the CLI, run:
+
+      `dbt run-operation create_all_samples --args '{"source_schema": "foreign_raw"}' --target dev_samples`
+    # yamllint enable rule:line-length
+    docs:
+      show: true
+    arguments:
+      - name: source_database
+        type: string
+        description: >
+          The name of the database where the source data is stored. It is usually the same as the
+          `dbname` in the profile configuration.
+      - name: source_schema
+        type: string
+        description: The name of the schema where the source data is stored.
+
+  - name: __create_full_sample
+    description: >
+      This private macro creates a full sample of the source data. It is used by the
+      `create_all_samples` macro and should not be used directly. It is useful when the source
+      data is small and can be loaded into the development and testing environments without
+      sampling.
+    docs:
+      show: true
+    arguments:
+      - name: node
+        type: dict
+        description: >
+          The node object for the model for which the sample is created. It is used to retrieve
+          the model's information and sampling configuration.
+      - name: source_database
+        type: string
+        description: >
+          The name of the database where the source data is stored. It is usually the same as the
+          `dbname` in the profile configuration.
+      - name: source_schema
+        type: string
+        description: The name of the schema where the source data is stored.
+
+  - name: __create_random_sample
+    description: >
+      This private macro creates a random sample of the source data. It is used by the
+      `create_all_samples` macro and should not be used directly. It is useful when the source
+      data is large and cannot be loaded into the development and testing environments without
+      sampling. The `sample_size` parameter is required to be set in the model config block (i.e.,
+      `dev_sample_size` and `test_sample_size`). The sample size is defined as an integer between
+      0 and 100, representing the percentage of the source data to be sampled.
+    docs:
+      show: true
+    arguments:
+      - name: node
+        type: dict
+        description: >
+          The node object for the model for which the sample is created. It is used to retrieve
+          the model's information and sampling configuration.
+      - name: source_database
+        type: string
+        description: >
+          The name of the database where the source data is stored. It is usually the same as the
+          `dbname` in the profile configuration.
+      - name: source_schema
+        type: string
+        description: The name of the schema where the source data is stored.
+
+  - name: __create_id_based_sample
+    description: >
+      This private macro creates an ID-based sample of the source data. It is used by the
+      `create_all_samples` macro and should not be used directly. It is used in cases where the
+      model's data is dependent on another model's data, and the sample should be created based on
+       the ID of the dependent model.
+      For example, if the model is a fact table and the sample should be created based on the ID
+      of the dimension table, this macro can be used.
+      The `ref_table`, `ref_column`, and (optionally) `filter_column` parameters are required to
+      be set in the model config block. The `ref_table` and `ref_column` parameters define the
+      dependent model and the ID column, respectively. The `filter_column` parameter is optional
+      and can be used to filter the dependent model's data based on a specific column value.
+    docs:
+      show: true
+    arguments:
+      - name: node
+        type: dict
+        description: >
+          The node object for the model for which the sample is created. It is used to retrieve
+          the model's information and sampling configuration.
+      - name: source_database
+        type: string
+        description: >
+          The name of the database where the source data is stored. It is usually the same as the
+          `dbname` in the profile configuration.
+      - name: source_schema
+        type: string
+        description: The name of the schema where the source data is stored.
