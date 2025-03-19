@@ -1,0 +1,10 @@
+name: CI_pipeline
+
+on:
+  pull_resquest:
+    branches:
+      -main
+
+jobs:
+  CI_jobs:
+    runs-on: self-hosted # ubuntu-latest
