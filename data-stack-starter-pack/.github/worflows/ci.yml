@@ -1,20 +1,24 @@
 name: CI_pipeline
 
 on:
-  pull_resquest:
+  pull_request:
     branches:
-      -main
+      - main
 
 jobs:
   CI_jobs:
-    runs-on: self-hosted # ubuntu-latest (runner in github with label self-hosted)
+    runs-on: ubuntu-latest # ubuntu-latest (runner in github with label self-hosted) #self-hosted
     env:
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      GIT_SHA: ${{ github.sha }}  # Automatically fetches the commit SHA
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: check for changed files only (if there was some files changing. Tests independently per file)
+        uses: tj-actions/changed-files@v46.0.3
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -24,4 +28,16 @@ jobs:
 
       - name: Install dependencies 
         run: uv sync --group ci
+
+      - name: dbt install deps
+        run: |
+          pip install dbt-core dbt-postgres
+          dbt deps
+
+      - name: dbt build 
+        run: dbt build --fail-fast --target test # fail-fast -> Stops execution immediately if any test fails.
+ 
+      - name: Run DBT command in PRD  (if build succeeds)
+        if: success()  #Only runs if previous steps succeed
+        run: dbt run --target prod
 
