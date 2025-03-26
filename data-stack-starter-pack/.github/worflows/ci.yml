@@ -8,11 +8,13 @@ on:
 jobs:
   CI_jobs:
     runs-on: ubuntu-latest # ubuntu-latest (runner in github with label self-hosted) #self-hosted
+    strategy:
+      fail-fast: true
     env:
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      GIT_SHA: ${{ github.sha }}  # Automatically fetches the commit SHA
+      #GIT_SHA: ${{ github.sha }}  # Automatically fetches the commit SHA
     steps:
       - name: Checkout
         uses: actions/checkout@v4
